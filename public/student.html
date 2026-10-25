@@ -2,50 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Dashboard - Bus Tracking</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 min-h-screen p-4">
+<body class="bg-slate-100 min-h-screen p-3 sm:p-4">
 
-  <div class="max-w-3xl mx-auto">
+  <div class="w-full max-w-3xl mx-auto">
     <div id="app">
-      <div class="flex items-center justify-between mb-4">
-        <h1 class="text-xl font-semibold text-slate-800">Student Dashboard</h1>
-        <button @click="logout" class="text-sm border border-red-300 text-red-600 rounded px-3 py-1 hover:bg-red-50">Logout</button>
+      <div class="flex items-center justify-between mb-3 sm:mb-4">
+        <h1 class="font-semibold text-slate-800">Student Dashboard</h1>
+        <button @click="logout" class="border border-red-300 text-red-600 rounded hover:bg-red-50">Logout</button>
       </div>
 
-      <div class="bg-white rounded-xl shadow p-4 mb-4">
-        <div class="flex gap-2 mb-4">
-          <select v-model="selectedBusId" class="flex-1 border border-slate-300 rounded-lg px-3 py-2">
+      <div class="bg-white rounded-xl shadow p-4 sm:p-5 mb-4">
+        <div class="flex flex-col sm:flex-row gap-2 mb-4">
+          <select v-model="selectedBusId" class="w-full sm:flex-1 border border-slate-300 rounded-lg">
             <option value="">-- Select a Bus --</option>
             <option v-for="bus in buses" :key="bus.id" :value="String(bus.id)">
               {{ bus.bus_number }} - {{ bus.route_name }}
             </option>
           </select>
           <button @click="trackBus" :disabled="!selectedBusId"
-            class="bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-4 py-2 disabled:opacity-50">
+            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 whitespace-nowrap">
             Track Bus
           </button>
         </div>
 
-        <p v-if="selectedBus" class="text-sm text-slate-700 mb-2">
+        <p v-if="selectedBus" class="text-slate-700 mb-2">
           <span class="font-medium">Selected bus:</span>
           {{ selectedBus.bus_number }} | {{ selectedBus.route_name }} | {{ selectedBus.status }}
         </p>
-        <p v-else class="text-sm text-slate-500 mb-2">No bus selected yet.</p>
+        <p v-else class="text-slate-500 mb-2">No bus selected yet.</p>
 
-        <div v-if="isTracking" class="text-sm text-slate-700 space-y-1">
+        <div v-if="isTracking" class="text-slate-700 space-y-1">
           <p><span class="font-medium">Status:</span> {{ location.status }}</p>
           <p><span class="font-medium">Speed:</span> {{ speedText }}</p>
           <p><span class="font-medium">Last update:</span> {{ lastUpdateText }}</p>
           <p><span class="font-medium">Coordinates:</span> {{ coordinateText }}</p>
           <p><span class="font-medium">Summary:</span> {{ formattedBus }}</p>
         </div>
-        <p v-else class="text-sm text-slate-500">Tracking is off. Select a bus and click Track Bus.</p>
+        <p v-else class="text-slate-500">Tracking is off. Select a bus and click Track Bus.</p>
 
-        <p v-if="errorMessage" class="text-sm text-red-600 mt-2">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="text-red-600 mt-2">{{ errorMessage }}</p>
       </div>
     </div>
 

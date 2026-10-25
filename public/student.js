@@ -87,6 +87,14 @@ var app = Vue.createApp({
     initMap: function () {
       this._map = L.map('map').setView([23.1287, 72.5451], 13);
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(this._map);
+
+      // handle container resize for responsive map view
+      var self = this;
+      window.addEventListener('resize', function () {
+        if (self._map) {
+          self._map.invalidateSize();
+        }
+      });
     },
 
     // Move the simple red dot. Called from updateLocation, not from a watcher.

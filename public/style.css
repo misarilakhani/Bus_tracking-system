@@ -1,5 +1,83 @@
-/* Leaflet needs a real height. Tailwind does the rest of the layout. */
+/* responsive styling for college bus tracking system */
+
+* {
+  box-sizing: border-box;
+}
+
+/* prevent unwanted page-level horizontal scroll on small devices */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* 1. responsive font sizes using clamp() and vw */
+h1 {
+  font-size: clamp(20px, 3vw, 32px) !important;
+  line-height: 1.25;
+}
+
+h2 {
+  font-size: clamp(16px, 2vw, 22px) !important;
+  line-height: 1.3;
+}
+
+p {
+  font-size: clamp(13px, 1.3vw, 16px);
+  line-height: 1.5;
+}
+
+label {
+  font-size: clamp(12px, 1.2vw, 14px);
+}
+
+input, select {
+  font-size: clamp(13px, 1.2vw, 15px);
+  padding: clamp(7px, 1vw, 10px) clamp(10px, 1.5vw, 14px);
+  width: 100%;
+}
+
+button {
+  font-size: clamp(12px, 1.2vw, 15px);
+  padding: clamp(6px, 1vw, 10px) clamp(12px, 1.8vw, 18px);
+  cursor: pointer;
+}
+
+/* table font sizes and responsive padding */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  font-size: clamp(12px, 1.1vw, 14px);
+  padding: clamp(6px, 1vw, 10px) clamp(8px, 1.2vw, 12px);
+}
+
+table td {
+  font-size: clamp(12px, 1.1vw, 13px);
+  padding: clamp(6px, 1vw, 10px) clamp(8px, 1.2vw, 12px);
+}
+
+/* smaller padding for action buttons inside table */
+table td button {
+  font-size: clamp(11px, 1vw, 13px);
+  padding: clamp(3px, 0.6vw, 6px) clamp(6px, 1vw, 10px);
+}
+
+/* 2. responsive map */
 #map {
   width: 100%;
-  height: 400px;
+  height: clamp(260px, 45vh, 460px);
+  min-height: 240px;
+}
+
+/* 3. responsive containers and tables */
+.overflow-x-auto {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ensure text inside cards does not cause overflow */
+.break-words {
+  word-break: break-word;
 }

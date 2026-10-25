@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Driver Dashboard - Bus Tracking</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-100 min-h-screen p-4">
+<body class="bg-slate-100 min-h-screen p-3 sm:p-4">
 
-  <div class="max-w-xl mx-auto">
+  <div class="w-full max-w-xl mx-auto">
     <div id="app">
-      <div class="flex items-center justify-between mb-4">
-        <h1 class="text-xl font-semibold text-slate-800">Driver Dashboard</h1>
-        <button @click="logout" class="text-sm border border-red-300 text-red-600 rounded px-3 py-1 hover:bg-red-50">Logout</button>
+      <div class="flex items-center justify-between mb-3 sm:mb-4">
+        <h1 class="font-semibold text-slate-800">Driver Dashboard</h1>
+        <button @click="logout" class="border border-red-300 text-red-600 rounded hover:bg-red-50">Logout</button>
       </div>
 
-      <div class="bg-white rounded-xl shadow p-4 mb-4 text-sm text-slate-700 space-y-1">
+      <div class="bg-white rounded-xl shadow p-4 sm:p-5 mb-4 text-slate-700 space-y-1">
         <div v-if="bus">
           <p><span class="font-medium">Assigned bus:</span> {{ bus.bus_number }}</p>
           <p><span class="font-medium">Route:</span> {{ bus.route_name }}</p>
@@ -33,22 +35,26 @@
         </p>
       </div>
 
-      <p v-if="errorMessage" class="text-sm text-red-600 mb-3">{{ errorMessage }}</p>
+      <p v-if="errorMessage" class="text-red-600 mb-3">{{ errorMessage }}</p>
 
-      <div class="bg-white rounded-xl shadow p-4 mb-4">
+      <div class="bg-white rounded-xl shadow p-4 sm:p-5 mb-4">
         <h2 class="font-medium text-slate-800 mb-2">Real GPS Tracking</h2>
-        <button @click="startGps" :disabled="!bus || trackingMode === 'gps'"
-          class="bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2 text-sm mr-2 disabled:opacity-50">Start GPS</button>
-        <button @click="stopGps" :disabled="trackingMode !== 'gps'"
-          class="border border-red-300 text-red-600 rounded px-3 py-2 text-sm disabled:opacity-50">Stop GPS</button>
+        <div class="flex flex-wrap gap-2">
+          <button @click="startGps" :disabled="!bus || trackingMode === 'gps'"
+            class="bg-green-600 hover:bg-green-700 text-white rounded disabled:opacity-50">Start GPS</button>
+          <button @click="stopGps" :disabled="trackingMode !== 'gps'"
+            class="border border-red-300 text-red-600 rounded disabled:opacity-50">Stop GPS</button>
+        </div>
       </div>
 
-      <div class="bg-white rounded-xl shadow p-4">
+      <div class="bg-white rounded-xl shadow p-4 sm:p-5">
         <h2 class="font-medium text-slate-800 mb-2">College Demo Simulation</h2>
-        <button @click="startDemo" :disabled="!bus || trackingMode === 'demo'"
-          class="bg-amber-500 hover:bg-amber-600 text-white rounded px-3 py-2 text-sm mr-2 disabled:opacity-50">Start Demo</button>
-        <button @click="stopDemo" :disabled="trackingMode !== 'demo'"
-          class="border border-slate-300 text-slate-600 rounded px-3 py-2 text-sm disabled:opacity-50">Stop Demo</button>
+        <div class="flex flex-wrap gap-2">
+          <button @click="startDemo" :disabled="!bus || trackingMode === 'demo'"
+            class="bg-amber-500 hover:bg-amber-600 text-white rounded disabled:opacity-50">Start Demo</button>
+          <button @click="stopDemo" :disabled="trackingMode !== 'demo'"
+            class="border border-slate-300 text-slate-600 rounded disabled:opacity-50">Stop Demo</button>
+        </div>
       </div>
     </div>
   </div>

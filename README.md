@@ -57,7 +57,7 @@ Vue is loaded from a CDN. There is no Vue CLI, Vite, Pinia, Vue Router, or Compo
 
 ---
 
-## 🗺️ How the Map Works (Viva Answer)
+## 🗺️ How the Map Works 
 
 Instead of complex markers or images, we use Leaflet's built-in **circleMarker**:
 ```javascript

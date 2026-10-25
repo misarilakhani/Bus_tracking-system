@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Bus Tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-4">
+
+  <div class="max-w-5xl mx-auto">
+    <div id="app">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-xl font-semibold text-slate-800">Admin Dashboard</h1>
+        <button @click="logout" class="text-sm border border-red-300 text-red-600 rounded px-3 py-1 hover:bg-red-50">Logout</button>
+      </div>
+
+      <div v-if="message" class="mb-4 rounded px-3 py-2 text-sm"
+        :class="messageType === 'error' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'">
+        {{ message }}
+      </div>
+
+      <div class="bg-white rounded-xl shadow p-4 mb-6">
+        <h2 class="font-medium text-slate-800 mb-3">{{ formHeading }}</h2>
+        <form @submit.prevent="saveBus">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+            <div>
+              <label class="block text-sm text-slate-600 mb-1">Bus Number</label>
+              <input type="text" v-model="form.bus_number" placeholder="e.g. Bus 104" required
+                class="w-full border border-slate-300 rounded-lg px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-600 mb-1">Route Name</label>
+              <input type="text" v-model="form.route_name" placeholder="e.g. Route 4: Bopal" required
+                class="w-full border border-slate-300 rounded-lg px-3 py-2">
+            </div>
+            <div>
+              <label class="block text-sm text-slate-600 mb-1">Assign Driver</label>
+              <select v-model="form.driver_id" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+                <option value="">-- No Driver --</option>
+                <option v-for="driver in drivers" :key="driver.id" :value="String(driver.id)">
+                  {{ driver.name }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-slate-600 mb-1">Status</label>
+              <select v-model="form.status" class="w-full border border-slate-300 rounded-lg px-3 py-2">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" :disabled="saving"
+            class="bg-blue-600 hover:bg-blue-700 text-white rounded px-3 py-2 text-sm disabled:opacity-50">
+            {{ saveButtonText }}
+          </button>
+          <button type="button" @click="clearForm"
+            class="border border-slate-300 text-slate-600 rounded px-3 py-2 text-sm ml-2">
+            Clear
+          </button>
+        </form>
+      </div>
+
+      <h2 class="font-medium text-slate-800 mb-2">College Buses</h2>
+      <p v-if="!busesLoaded" class="text-sm text-slate-500 mb-2">Loading bus count...</p>
+      <p v-else-if="totalBuses === 0" class="text-sm text-slate-500 mb-2">No buses in the system.</p>
+      <p v-else class="text-sm text-slate-600 mb-2">Total buses: {{ totalBuses }}</p>
+
+      <div class="bg-white rounded-xl shadow overflow-x-auto mb-6">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-800 text-white">
+            <tr>
+              <th class="text-left px-3 py-2">ID</th>
+              <th class="text-left px-3 py-2">Bus Number</th>
+              <th class="text-left px-3 py-2">Route Name</th>
+              <th class="text-left px-3 py-2">Driver</th>
+              <th class="text-left px-3 py-2">Status</th>
+              <th class="text-left px-3 py-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="!busesLoaded">
+              <td colspan="6" class="text-center px-3 py-3 text-slate-500">Loading buses...</td>
+            </tr>
+            <tr v-else-if="buses.length === 0">
+              <td colspan="6" class="text-center px-3 py-3 text-slate-500">No buses found.</td>
+            </tr>
+            <tr v-for="bus in buses" :key="bus.id" class="border-t border-slate-200">
+              <td class="px-3 py-2">{{ bus.id }}</td>
+              <td class="px-3 py-2 font-medium">{{ bus.bus_number }}</td>
+              <td class="px-3 py-2">{{ bus.route_name }}</td>
+              <td class="px-3 py-2">{{ bus.driver_name || 'None' }}</td>
+              <td class="px-3 py-2">{{ bus.status }}</td>
+              <td class="px-3 py-2">
+                <button @click="editBus(bus)" class="bg-blue-600 text-white rounded px-2 py-1 text-xs mr-1">Edit</button>
+                <button @click="deleteBus(bus.id)" class="bg-red-600 text-white rounded px-2 py-1 text-xs">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="font-medium text-slate-800 mb-2">Student Tracking History</h2>
+      <div class="bg-white rounded-xl shadow overflow-x-auto">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-800 text-white">
+            <tr>
+              <th class="text-left px-3 py-2">Student Name</th>
+              <th class="text-left px-3 py-2">Email</th>
+              <th class="text-left px-3 py-2">Bus Number</th>
+              <th class="text-left px-3 py-2">Date</th>
+              <th class="text-left px-3 py-2">Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="!historyLoaded">
+              <td colspan="5" class="text-center px-3 py-3 text-slate-500">Loading tracking history...</td>
+            </tr>
+            <tr v-else-if="history.length === 0">
+              <td colspan="5" class="text-center px-3 py-3 text-slate-500">No tracking activity recorded yet.</td>
+            </tr>
+            <tr v-for="item in history" :key="item.id" class="border-t border-slate-200">
+              <td class="px-3 py-2">{{ item.name }}</td>
+              <td class="px-3 py-2">{{ item.email }}</td>
+              <td class="px-3 py-2 font-medium">{{ item.bus_number }}</td>
+              <td class="px-3 py-2">{{ formatDate(item.tracked_at) }}</td>
+              <td class="px-3 py-2">{{ formatTime(item.tracked_at) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Bus Tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+
+  <div id="app" class="w-full max-w-md bg-white rounded-xl shadow p-8">
+    <h1 class="text-2xl font-semibold text-slate-800 text-center">College Bus Tracking</h1>
+    <p class="text-center text-slate-500 mt-1 mb-6">
+      {{ mode === 'register' ? 'Create a student account' : 'Sign in to continue' }}
+    </p>
+
+    <form @submit.prevent="submitForm" class="space-y-4">
+      <div v-if="mode === 'register'">
+        <label class="block text-sm text-slate-600 mb-1">Name</label>
+        <input type="text" v-model="name" required
+          class="w-full border border-slate-300 rounded-lg px-3 py-2">
+      </div>
+
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Email</label>
+        <input type="email" v-model="email" required
+          class="w-full border border-slate-300 rounded-lg px-3 py-2">
+      </div>
+
+      <div>
+        <label class="block text-sm text-slate-600 mb-1">Password</label>
+        <input type="password" v-model="password" required
+          class="w-full border border-slate-300 rounded-lg px-3 py-2">
+      </div>
+
+      <p v-if="errorMessage" class="text-sm text-red-600">{{ errorMessage }}</p>
+      <p v-if="successMessage" class="text-sm text-green-600">{{ successMessage }}</p>
+
+      <button type="submit" :disabled="loading"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-2 disabled:opacity-50">
+        {{ loading ? 'Please wait...' : submitLabel }}
+      </button>
+    </form>
+
+    <button type="button" @click="switchMode"
+      class="block w-full text-sm text-blue-600 mt-4">
+      {{ mode === 'login' ? 'Create an account' : 'Back to login' }}
+    </button>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+/* Leaflet needs a real height. Tailwind does the rest of the layout. */
+#map {
+  width: 100%;
+  height: 400px;
+}

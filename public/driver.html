@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Driver Dashboard - Bus Tracking</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen p-4">
+
+  <div class="max-w-xl mx-auto">
+    <div id="app">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-xl font-semibold text-slate-800">Driver Dashboard</h1>
+        <button @click="logout" class="text-sm border border-red-300 text-red-600 rounded px-3 py-1 hover:bg-red-50">Logout</button>
+      </div>
+
+      <div class="bg-white rounded-xl shadow p-4 mb-4 text-sm text-slate-700 space-y-1">
+        <div v-if="bus">
+          <p><span class="font-medium">Assigned bus:</span> {{ bus.bus_number }}</p>
+          <p><span class="font-medium">Route:</span> {{ bus.route_name }}</p>
+          <p><span class="font-medium">Bus status:</span> {{ bus.status }}</p>
+        </div>
+        <p v-else>No bus assigned.</p>
+
+        <p><span class="font-medium">Latitude:</span> {{ latitudeText }}</p>
+        <p><span class="font-medium">Longitude:</span> {{ longitudeText }}</p>
+        <p><span class="font-medium">Speed:</span> {{ speedText }}</p>
+        <p>
+          <span class="font-medium">Tracking:</span>
+          <span v-if="trackingMode === 'gps'" class="bg-green-100 text-green-700 rounded px-2 py-0.5">Real GPS Active</span>
+          <span v-else-if="trackingMode === 'demo'" class="bg-amber-100 text-amber-800 rounded px-2 py-0.5">Demo Active</span>
+          <span v-else class="bg-slate-200 text-slate-600 rounded px-2 py-0.5">Idle</span>
+        </p>
+      </div>
+
+      <p v-if="errorMessage" class="text-sm text-red-600 mb-3">{{ errorMessage }}</p>
+
+      <div class="bg-white rounded-xl shadow p-4 mb-4">
+        <h2 class="font-medium text-slate-800 mb-2">Real GPS Tracking</h2>
+        <button @click="startGps" :disabled="!bus || trackingMode === 'gps'"
+          class="bg-green-600 hover:bg-green-700 text-white rounded px-3 py-2 text-sm mr-2 disabled:opacity-50">Start GPS</button>
+        <button @click="stopGps" :disabled="trackingMode !== 'gps'"
+          class="border border-red-300 text-red-600 rounded px-3 py-2 text-sm disabled:opacity-50">Stop GPS</button>
+      </div>
+
+      <div class="bg-white rounded-xl shadow p-4">
+        <h2 class="font-medium text-slate-800 mb-2">College Demo Simulation</h2>
+        <button @click="startDemo" :disabled="!bus || trackingMode === 'demo'"
+          class="bg-amber-500 hover:bg-amber-600 text-white rounded px-3 py-2 text-sm mr-2 disabled:opacity-50">Start Demo</button>
+        <button @click="stopDemo" :disabled="trackingMode !== 'demo'"
+          class="border border-slate-300 text-slate-600 rounded px-3 py-2 text-sm disabled:opacity-50">Stop Demo</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="driver.js"></script>
+</body>
+</html>
